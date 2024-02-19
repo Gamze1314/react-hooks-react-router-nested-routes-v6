@@ -1,32 +1,22 @@
-import { useState, useEffect } from "react";
 import UserCard from "../components/UserCard";
-import NavBar from "../components/NavBar";
+import { Outlet , useOutletContext } from "react-router-dom";
+// hook to access context data passed down from App component.
+// pass context prop
+function Home(){
+  const users = useOutletContext();
+  console.log(users)
 
-function Home() {
-  const [users, setUsers] = useState([]);
+    const userList = users.map(user =>{
+        return <UserCard key={user.id} user={user}/>;
+    });
 
-  useEffect(() =>{
-    fetch("http://localhost:4000/users")
-      .then(r => r.json())
-      .then(data => setUsers(data))
-      .catch(error => console.error(error));
-  }, []);
-  
-  const userList = users.map(user =>{
-    return <UserCard key={user.id} user={user}/>;
-  });
-
-  return (
-    <>
-      <header>
-        <NavBar />
-      </header>
+    return (
       <main>
         <h1>Home!</h1>
         {userList}
+        <Outlet context={users} />
       </main>
-    </>
-  );
+    );
 };
 
 export default Home;
